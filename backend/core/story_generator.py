@@ -19,26 +19,9 @@ class StoryGenerator:
     @classmethod
     def _get_llm(cls):
         serviceurl = os.getenv("CHOREO_OPENAI_CONNECTION_SERVICEURL")
-        consumerkey = os.getenv("CHOREO_OPENAI_CONNECTION_CONSUMERKEY")
-        consumersecret = os.getenv("CHOREO_OPENAI_CONNECTION_CONSUMERSECRET")
-        tokenurl = os.getenv("CHOREO_OPENAI_CONNECTION_TOKENURL")
 
-        if serviceurl and consumerkey and consumersecret and tokenurl:
-            # Step 1: Get OAuth token
-            response = requests.post(
-                tokenurl,
-                data={"grant_type": "client_credentials"},
-                auth=(consumerkey, consumersecret),
-            )
-            response.raise_for_status()
-            access_token = response.json()["access_token"]
-
-            # Step 2: Use token with OpenAI-compatible endpoint
-            return ChatOpenAI(
-                model="gpt-4-turbo",
-                api_key=access_token,
-                base_url=serviceurl
-            )
+        if serviceurl:
+            return ChatOpenAI(model="gpt-4-turbo", base_url=serviceurl)
 
         return ChatOpenAI(model="gpt-4-turbo")
 
